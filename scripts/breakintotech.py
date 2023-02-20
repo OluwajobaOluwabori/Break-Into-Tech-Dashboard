@@ -195,15 +195,27 @@ def chart(roles=roles_default):
                 args=[{"visible": test},
                     {"title": "Tools used by role: All"}]))
         test=[False]*count
-    fig1.update_layout(updatemenus=[dict(
-        type='dropdown',
-        active=0,
-        buttons=list(buttonsList))
-                                ], xaxis_tickangle=-45)
+    fig1.update_layout(updatemenus=[dict( type='dropdown', active=0, buttons=list(buttonsList))], 
+                       xaxis_tickangle=-45,
+                       font_color="rgb(237, 216, 216)",
+                       #hoverlabel_bgcolor="rgb(68, 112, 118)"
+                       paper_bgcolor='rgb(68, 112, 118)',
+                       plot_bgcolor= 'rgb(68, 112, 118)')
     #fig.show()
     figures = [fig1]
     #figures.append(fig1)
+    #Calling the function to obtain the possible(unique) answers for the necessary columns
+
+    df_clean['LanguageHaveWorkedWith']= split_multiple_answers('LanguageHaveWorkedWith')
+    df_clean['LanguageWantToWorkWith']=split_multiple_answers('LanguageWantToWorkWith')
+    df_clean['DatabaseHaveWorkedWith']=split_multiple_answers('DatabaseHaveWorkedWith')
+    df_clean['DatabaseWantToWorkWith']=split_multiple_answers('DatabaseWantToWorkWith')
+    df_clean['PlatformHaveWorkedWith']=split_multiple_answers('PlatformHaveWorkedWith')
+    df_clean['PlatformWantToWorkWith']=split_multiple_answers('PlatformWantToWorkWith')
+    df_clean['WebframeHaveWorkedWith']=split_multiple_answers('WebframeHaveWorkedWith')
+    df_clean['WebframeWantToWorkWith']=split_multiple_answers('WebframeWantToWorkWith')
     columns=[['LanguageHaveWorkedWith','LanguageWantToWorkWith'],['DatabaseHaveWorkedWith','DatabaseWantToWorkWith'],['PlatformHaveWorkedWith','PlatformWantToWorkWith']]
+
     for col1,col2 in columns:
         df1 = df_clean[col1].apply(pd.Series) \
             .merge(df_clean, right_index = True, left_index = True) \
@@ -340,7 +352,7 @@ def chart(roles=roles_default):
         ###
         df=daata
 
-        palette = cycle(px.colors.qualitative.T10)
+        palette = cycle(px.colors.qualitative.Plotly)
         colors = {c:next(palette) for c in df['Tools']}
 
         fig = go.Figure()
@@ -366,10 +378,18 @@ def chart(roles=roles_default):
             role_trace_start_and_end_index["end"] = total_traces_count - 1
             trace_indexes[role] = role_trace_start_and_end_index
 
-        fig.update_layout(barmode="group", plot_bgcolor = 'white',legend_font_size= 9,legend=dict(
-   
-       x=-0.5),updatemenus=list([
-    dict( x = -0.5)]))
+        fig.update_layout(barmode="group",
+                          legend_font_size= 9,
+                          font_color="white",
+                          #xaxis_color="white",
+                          #yaxis_color="white",
+                          paper_bgcolor='rgb(68, 112, 118)',
+                          legend_font_color='white',
+                          plot_bgcolor= 'rgb(68, 112, 118)',
+                          legend=dict(x=-1.2,y=0.7,#bgcolor='LightSteelBlue', bordercolor='LightSteelBlue',
+
+                        xanchor = 'auto'),updatemenus=list([
+    dict( x = -0.5,y=1)]))
         ### Add buttons
         addButtonsToFigure(fig, data_frame, total_traces_count, trace_indexes)
         #fig.show()
